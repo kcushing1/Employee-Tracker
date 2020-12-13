@@ -1,25 +1,17 @@
 const Role = require("../lib/role");
 const Employee = require("../lib/employee");
+var mysql = require("mysql");
+
+var connection = mysql.createConnection({
+  host: "localhost",
+  port: 3306,
+  user: "root",
+  password: "omg0hGosh!",
+  database: "employeesDB",
+});
 
 //import employeesDB data
 //check activity and notes on doing this
-
-const initQuestion = {
-    type: "list",
-    message: "Please select an action:",
-    name: "action",
-    choices: [
-      "Add Department",
-      "Add Role",
-      "Add Employee",
-      "View Departments",
-      "View Roles",
-      "View Employees",
-      "Update Department",
-      "Update Role",
-      "Update Employee",
-    ],
-  },
 
 const otherQs = [
   {
@@ -34,25 +26,7 @@ const otherQs = [
     name: "depttest",
     when: (answers) => answers.action === "Add Department",
   },
-  {
-    type: "input",
-    message: "What is the new role title?",
-    name: "title",
-    when: (answers) => answers.action === "Add Role",
-  },
-  {
-    type: "input",
-    message: "What is the salary?",
-    name: "salary",
-    when: (answers) => answers.action === "Add Role",
-  },
-  {
-    type: "list",
-    message: "What department is this role in?",
-    name: "dept_role",
-    choices: ["x", "y", "z"], //import depts here
-    when: (answers) => answers.action === "Add Role",
-  },
+  ,
   {
     type: "input",
     message: "What is the new employee's first name?",
@@ -89,13 +63,27 @@ const otherQs = [
     name: "managerLast",
     when: "managerConfirm",
   },
+  {
+    type: "input",
+    message: "What is the manager's first name?",
+    name: "managerFirst",
+    when: "managerConfirm",
+  },
+  {
+    type: "input",
+    message: "What is the manager's last name?",
+    name: "managerLast",
+    when: "managerConfirm",
+  },
 ];
 
-module.exports = questions;
+module.exports = {
+  initQuestion,
+};
 
 //module.exports = {
-    //function1,
-    //function2
+//function1,
+//function2
 //}
 
 //then to call it in other file:
