@@ -1,3 +1,6 @@
+const Role = require("../lib/role");
+const Employee = require("../lib/employee");
+
 const questions = [
   {
     type: "list",
