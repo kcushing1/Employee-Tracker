@@ -4,12 +4,12 @@ create database employeesDB;
 
 use employeesDB;
 
-create table department(
+create table departments(
 	id int auto_increment primary key,
     name varchar(30)
 );
 
-create table role(
+create table roles(
 	id int auto_increment primary key,
     title varchar(30),
     salary decimal(10,2),
