@@ -21,7 +21,8 @@ function addDepartment() {
     })
     .then((reply) => {
       console.log(reply.addDept);
-      const deptQuery = connection.query(
+      //const deptQuery =
+      connection.query(
         "insert into departments (name) values ('" + reply.addDept + "')",
         (err, res) => {
           if (err) throw err;
@@ -86,124 +87,71 @@ function addRole() {
 
 function addEmployee() {
   console.log("beginning of addEmployee");
-  connection.query(
-    "select * from roles inner join employees on roles.id = employees.role_id where roles.title = 'Manager'",
-    (err, res) => {
-      if (err) throw err;
-      inquirer
-        .prompt([
-          {
-            type: "input",
-            message: "What is the new employee's first name?",
-            name: "firstName",
-          },
-          {
-            type: "input",
-            message: "What is the new employee's last name?",
-            name: "lastName",
-          },
-          {
-            type: "input",
-            message: "What is the employee's role?",
-            name: "roleEmp",
-          },
-          {
-            type: "confirm",
-            message: "Does this employee have a manager?",
-            name: "managerConfirm",
-          },
-          {
-            type: "list",
-            message: "Please select a manager:",
-            name: "empManager",
-            choices: function () {
-              let managersArray = [];
-              for (let i = 0; i < res.length; i++) {
-                const newManager = res[i].first_name + " " + res[i].last_name;
-                managersArray.push(newManager);
-              }
-              return managersArray;
-            },
-            when: (answers) => answers.managerConfirm === true,
-          },
-        ])
-        .then((reply) => {
-          console.log("the .then for addEmployee");
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "What is the new employee's first name?",
+        name: "firstName",
+      },
+      {
+        type: "input",
+        message: "What is the new employee's last name?",
+        name: "lastName",
+      },
+      {
+        type: "input",
+        message: "What is the employee's role id?",
+        name: "roleEmp",
+      },
+      {
+        type: "confirm",
+        message: "Does this employee have a manager?",
+        name: "managerConfirm",
+      },
+      {
+        type: "input",
+        message: "What is the manager's employee id?",
+        name: "empMngId",
+        when: (answers) => answers.managerConfirm === true,
+      },
+    ])
+    .then((reply) => {
+      console.log("the .then for addEmployee");
 
-          const findMngId = function () {
-            for (let i = 0; i < res.length; i++) {
-              if (
-                reply.empManager &&
-                reply.empManager.includes(res[i].last_name)
-              ) {
-                console.log(
-                  "empManager is " +
-                    reply.empManager +
-                    "and the db manager is " +
-                    res[i].last_name
-                );
-                let mangId = res[i].id;
-                return mangId;
-              } else {
-                return 0;
-              }
-            }
-          };
+      let first = reply.firstName;
+      let last = reply.lastName;
+      let roleId = reply.roleEmp;
+      let mngId = reply.empMngId || 0;
 
-          console.log(findMngId());
-          console.log(reply.roleEmp);
+      const newEmployee = { first, last, roleId, mngId };
 
-          let replyRole = reply.roleEmp;
-          let roleId = getRoleId(replyRole);
-          let mngId = findMngId();
+      console.log(newEmployee);
 
-          //create Role from class
-          //partialEmp = [reply.firstName, reply.lastName, replyRole, mngId];
-
-          //console.log(partialEmp);
-
-          //return partialEmp;
-          //let roleId = getRoleId(partialEmp[3]);
-          const newEmployee = new Employee(
-            reply.firstName,
-            reply.lastName,
-            roleId,
-            mngId
-          );
-          console.log(newEmployee);
-        });
-    }
-  );
-  //call ftn to push to db
-  newEmployeeToDb();
+      //console.log("inside newEmployeeToDb function");
+      connection.query(
+        "insert into employees set ?",
+        {
+          first_name: reply.firstName,
+          last_name: reply.lastName,
+          role_id: reply.roleEmp,
+          manager_id: mngId,
+        },
+        function (err, res) {
+          if (err) throw err;
+          console.log("a new employee was added");
+        }
+      );
+      //newEmployeeToDb(newEmployee);
+    });
 }
 
-function newEmployeeToDb() {
-  console.log("newEmployeeToDb function");
-}
+function newEmployeeToDb(employee) {}
 
 function newRoleToDb(role) {
   connection.query("insert into roles set ?", role, function (err, res) {
     if (err) throw err;
     console.log("a new role was added");
-  });
-}
-
-function getRoleId(role) {
-  const roleQuery = "select * from roles where title = '" + role + "'";
-  console.log("inside getRoleId and " + roleQuery);
-  connection.query(roleQuery, function (err, resp) {
-    if (err) throw err;
-    console.log("inside role query");
-    console.log(resp[0].id);
-    if (resp[0].id) {
-      console.log("inside the getRole if statement");
-      const selectedId = resp[0].id;
-      console.log(selectedId);
-      return selectedId;
-    } else {
-      console.log("That role does not exist. Please add role.");
-    }
   });
 }
 
