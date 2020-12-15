@@ -142,11 +142,8 @@ function addEmployee() {
           console.log("a new employee was added");
         }
       );
-      //newEmployeeToDb(newEmployee);
     });
 }
-
-function newEmployeeToDb(employee) {}
 
 function newRoleToDb(role) {
   connection.query("insert into roles set ?", role, function (err, res) {
