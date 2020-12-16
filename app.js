@@ -1,7 +1,7 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql");
 const conTable = require("console.table");
-//const questions = require("./develop/queries/questions");
+
 const {
   addDepartment,
   addRole,
@@ -13,6 +13,8 @@ const {
   viewRoles,
   viewEmployees,
 } = require("./develop/queries/viewQueries");
+
+const { updateRole } = require("./develop/queries/updateQueries");
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -51,9 +53,7 @@ function start() {
         "View Departments",
         "View Roles",
         "View Employees",
-        "Update Department",
         "Update Role",
-        "Update Employee",
         "Exit",
       ],
     })
@@ -71,6 +71,8 @@ function start() {
         viewRoles();
       } else if (reply.chooseAction === "View Employees") {
         viewEmployees();
+      } else if (reply.chooseAction === "Update Role") {
+        updateRole();
       } else {
         console.log("this response has not been written yet");
       }
