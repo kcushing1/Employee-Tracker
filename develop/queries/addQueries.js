@@ -100,6 +100,7 @@ function addEmployee() {
         name: "lastName",
       },
       {
+        //list the roles
         type: "input",
         message: "What is the employee's role id?",
         name: "roleEmp",
@@ -110,6 +111,7 @@ function addEmployee() {
         name: "managerConfirm",
       },
       {
+        //list the managers
         type: "input",
         message: "What is the manager's employee id?",
         name: "empMngId",
