@@ -15,6 +15,7 @@ const {
 } = require("./develop/queries/viewQueries");
 
 const { updateRole } = require("./develop/queries/updateQueries");
+const { viewBudget } = require("./develop/queries/budgetQuery");
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -53,6 +54,7 @@ function start() {
         "View Departments",
         "View Roles",
         "View Employees",
+        "View Department Budget",
         "Update Role",
         "Exit",
       ],
@@ -71,6 +73,8 @@ function start() {
         viewRoles();
       } else if (reply.chooseAction === "View Employees") {
         viewEmployees();
+      } else if (reply.chooseAction === "View Department Budget") {
+        viewBudget();
       } else if (reply.chooseAction === "Update Role") {
         updateRole();
       } else {

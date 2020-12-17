@@ -12,7 +12,7 @@ let connection = mysql.createConnection({
 function viewDepartments() {
   connection.query("SELECT * FROM departments", function (err, res) {
     if (err) throw err;
-    console.log("inside viewDepts query");
+    //display departments as table
     console.table(res);
   });
 }
@@ -20,7 +20,7 @@ function viewDepartments() {
 function viewRoles() {
   connection.query("SELECT * FROM roles", function (err, res) {
     if (err) throw err;
-    console.log("inside viewRoles query");
+    //display roles as table
     console.table(res);
   });
 }
@@ -28,7 +28,7 @@ function viewRoles() {
 function viewEmployees() {
   connection.query("SELECT * FROM employees", function (err, res) {
     if (err) throw err;
-    console.log("inside viewEmps query");
+    //display employees as table
     console.table(res);
   });
 }

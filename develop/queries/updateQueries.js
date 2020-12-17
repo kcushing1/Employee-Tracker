@@ -62,17 +62,16 @@ function updateRole() {
               console.log("inside response from updateRole inquirer");
               console.log(reply);
 
-              //filter for role id
+              //get ids for role and employee
               const findRoleId = parseInt([...reply.newRole].pop());
               const findEmpId = parseInt([...ans.empName].pop());
 
               console.log(findRoleId);
-              //filter for employee id
 
               console.log(findEmpId);
               updateRoleIdToDb(findEmpId, findRoleId);
             });
-        }); //end names query
+        });
       });
   });
 }
@@ -80,7 +79,6 @@ function updateRole() {
 function updateRoleIdToDb(empId, roleId) {
   const query = "UPDATE employees SET role_id = ? WHERE id = ?";
   const idsArr = [roleId, empId];
-  console.log(idsArr);
   connection.query(query, idsArr, (err) => {
     if (err) throw err;
     else {

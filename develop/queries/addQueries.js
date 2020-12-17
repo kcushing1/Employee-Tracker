@@ -165,8 +165,8 @@ function addEmployee() {
                 let first = capitalize(reply.firstName);
                 let last = capitalize(reply.lastName);
 
-                let roleId = [...ans.roleEmp].pop();
-                let mngId = [...reply.empMngId].pop() || 0;
+                let roleId = parseInt([...ans.roleEmp].pop());
+                let mngId = parseInt([...reply.empMngId].pop()) || 0;
 
                 const newEmployee = new Employee(first, last, roleId, mngId);
 
