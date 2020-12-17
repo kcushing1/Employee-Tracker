@@ -3,7 +3,6 @@ const Employee = require("../lib/employee");
 const inquirer = require("inquirer");
 const mysql = require("mysql");
 const capitalize = require("../lib/capitalize");
-const { connect } = require("http2");
 
 let connection = mysql.createConnection({
   host: "localhost",
@@ -23,9 +22,9 @@ function addDepartment() {
     })
     .then((reply) => {
       console.log(reply.addDept);
-      //const deptQuery =
+      const newDept = capitalize(reply.addDept);
       connection.query(
-        "insert into departments (name) values ('" + reply.addDept + "')",
+        "insert into departments (name) values ('" + newDept + "')",
         (err, res) => {
           if (err) throw err;
           console.log("dept added...probably");
@@ -77,8 +76,10 @@ function addRole() {
           }
         };
 
+        const newTitle = capitalize(answer.title);
+
         //create Role from class
-        const newRole = new Role(answer.title, answer.salary, findDeptId());
+        const newRole = new Role(newTitle, answer.salary, findDeptId());
 
         console.log(newRole);
 
