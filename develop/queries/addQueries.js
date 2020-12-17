@@ -2,6 +2,8 @@ const Role = require("../lib/role");
 const Employee = require("../lib/employee");
 const inquirer = require("inquirer");
 const mysql = require("mysql");
+const capitalize = require("../lib/capitalize");
+const { connect } = require("http2");
 
 let connection = mysql.createConnection({
   host: "localhost",
@@ -65,6 +67,7 @@ function addRole() {
       .then((answer) => {
         console.log("this is .then for addRole");
         console.log("deptRole is " + answer.deptRole);
+
         const findDeptId = function () {
           for (let i = 0; i < res.length; i++) {
             if (answer.deptRole === res[i].name) {
@@ -87,70 +90,108 @@ function addRole() {
 
 function addEmployee() {
   console.log("beginning of addEmployee");
-  inquirer
-    .prompt([
-      {
-        type: "input",
-        message: "What is the new employee's first name?",
-        name: "firstName",
-      },
-      {
-        type: "input",
-        message: "What is the new employee's last name?",
-        name: "lastName",
-      },
-      {
-        //list the roles
-        type: "input",
-        message: "What is the employee's role id?",
-        name: "roleEmp",
-      },
-      {
-        type: "confirm",
-        message: "Does this employee have a manager?",
-        name: "managerConfirm",
-      },
-      {
-        //list the managers
-        type: "input",
-        message: "What is the manager's employee id?",
-        name: "empMngId",
-        when: (answers) => answers.managerConfirm === true,
-      },
-    ])
-    .then((reply) => {
-      console.log("the .then for addEmployee");
 
-      let first = reply.firstName;
-      let last = reply.lastName;
-      let roleId = reply.roleEmp;
-      let mngId = reply.empMngId || 0;
-
-      const newEmployee = { first, last, roleId, mngId };
-
-      console.log(newEmployee);
-
-      //console.log("inside newEmployeeToDb function");
-      connection.query(
-        "insert into employees set ?",
+  //get roles array from db
+  connection.query("SELECT * FROM roles", (err, resp) => {
+    if (err) throw err;
+    console.log("inside addEmployee.rolesArr query");
+    inquirer
+      .prompt([
         {
-          first_name: reply.firstName,
-          last_name: reply.lastName,
-          role_id: reply.roleEmp,
-          manager_id: mngId,
+          type: "list",
+          message: "What is the employee's role?",
+          name: "roleEmp",
+          choices: function () {
+            let rolesArr = [];
+            for (let i = 0; i < resp.length; i++) {
+              const addRole = resp[i].title + " " + resp[i].id;
+              rolesArr.push(addRole);
+            }
+            console.log(rolesArr);
+            return rolesArr;
+          },
         },
-        function (err, res) {
-          if (err) throw err;
-          console.log("a new employee was added");
-        }
-      );
-    });
+      ])
+      .then((ans) => {
+        console.log(ans.roleEmp);
+
+        connection.query(
+          "SELECT * FROM roles INNER JOIN employees ON roles.id = employees.role_id WHERE roles.title = 'Manager'",
+          (error, res) => {
+            if (error) throw err;
+
+            inquirer
+              .prompt([
+                {
+                  type: "input",
+                  message: "What is the new employee's first name?",
+                  name: "firstName",
+                },
+                {
+                  type: "input",
+                  message: "What is the new employee's last name?",
+                  name: "lastName",
+                },
+
+                {
+                  type: "confirm",
+                  message: "Does this employee have a manager?",
+                  name: "managerConfirm",
+                },
+                {
+                  type: "list",
+                  message: "What is the manager's employee id?",
+                  name: "empMngId",
+                  choices: function () {
+                    let managersArray = [];
+                    for (let i = 0; i < res.length; i++) {
+                      const newManager =
+                        res[i].first_name +
+                        " " +
+                        res[i].last_name +
+                        " " +
+                        res[i].id;
+                      managersArray.push(newManager);
+                    }
+                    return managersArray;
+                  },
+                  when: (answers) => answers.managerConfirm === true,
+                },
+              ])
+              .then((reply) => {
+                console.log("the .then for addEmployee");
+
+                let first = capitalize(reply.firstName);
+                let last = capitalize(reply.lastName);
+
+                let roleId = [...ans.roleEmp].pop();
+                let mngId = [...reply.empMngId].pop() || 0;
+
+                const newEmployee = new Employee(first, last, roleId, mngId);
+
+                console.log(newEmployee);
+                newEmployeeToDb(newEmployee);
+              });
+          }
+        );
+      }); //end connectionQuery for rolesArr
+  });
 }
 
 function newRoleToDb(role) {
-  connection.query("insert into roles set ?", role, function (err, res) {
+  connection.query("INSERT INTO ROLES SET ?", role, function (err, res) {
     if (err) throw err;
     console.log("a new role was added");
+  });
+}
+
+function newEmployeeToDb(emp) {
+  const query = "INSERT INTO EMPLOYEES SET ?";
+  connection.query(query, emp, (err, res) => {
+    if (err) throw err;
+    else {
+      console.log("employee added");
+    }
   });
 }
 
