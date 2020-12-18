@@ -1,8 +1,23 @@
 insert into departments (name)
-values ("Food Services"), ("Housekeeping"), ("Engineering"), ("Marketing")
+values
+("Food Services"), 
+("Housekeeping"), 
+("Engineering"), 
+("Marketing");
 
 insert into roles (title, salary, dept_id)
-values ("Executive Chef", 60000.00,1), ("Director of Housekeeping", 56800.00, 2), ("Manager", 34000, 3), ("Engineer", 60000, 4), ("Sales", 46000, 3)
+values
+("Chef", 40000.00,1), 
+("Housekeeping", 56800.00, 2), 
+("Manager", 34800, 3), 
+("Engineer", 60000, 4), 
+("Sales", 46200, 3);
 
 insert into employees (first_name, last_name, role_id, manager_id)
-values ("Frodo", "Baggins", 1, 1), ("Harry", "Potter", 3,3), ("Leslie", "Knope", 3, 1)
+values 
+("Frodo", "Baggins", 1, 3), 
+("Harry", "Potter", 3,4), 
+("Leslie", "Knope", 3, null),
+("William", "Shakespeare", 4,3),
+("Peter", "Rabbit", 2,6),
+("Veronica", "Mars",4,4);

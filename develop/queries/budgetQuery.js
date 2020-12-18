@@ -17,7 +17,7 @@ function viewBudget() {
     if (err) throw err;
     const deptArr = function () {
       let deptsArr = [];
-      for (let i = 0; i < resp.length; i++) {
+      for (let i = 1; i < resp.length; i++) {
         const addDept = resp[i].name + " " + resp[i].id;
         deptsArr.push(addDept);
       }

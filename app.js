@@ -11,6 +11,7 @@ const {
   viewDepartments,
   viewRoles,
   viewEmployees,
+  viewTeam,
 } = require("./develop/queries/viewQueries");
 
 const {
@@ -58,6 +59,7 @@ function start() {
         "View Roles",
         "View Employees",
         "View Department Budget",
+        "View Team by Manager",
         "Update Employee's Role",
         "Update Employee's Manager",
         "Exit",
@@ -79,6 +81,8 @@ function start() {
         viewEmployees();
       } else if (reply.chooseAction === "View Department Budget") {
         viewBudget();
+      } else if (reply.chooseAction === "View Team by Manager") {
+        viewTeam();
       } else if (reply.chooseAction === "Update Employee's Role") {
         updateRole();
       } else if (reply.chooseAction === "Update Employee's Manager") {

@@ -58,7 +58,8 @@ function addRole() {
           choices: function () {
             let deptArray = [];
             for (let i = 0; i < res.length; i++) {
-              deptArray.push(res[i].name);
+              let newDept = res[i].name + " " + res[i].id;
+              deptArray.push(newDept);
             }
             return deptArray;
           },
@@ -73,7 +74,7 @@ function addRole() {
         const newTitle = capitalize(answer.title);
 
         //create Role from class
-        const newRole = new Role(newTitle, answer.salary, findDeptId());
+        const newRole = new Role(newTitle, answer.salary, findDeptId);
 
         console.log(newRole);
 
@@ -160,7 +161,7 @@ function addEmployee() {
                 let last = capitalize(reply.lastName);
 
                 let roleId = getId(ans.roleEmp);
-                let mngId = parseInt(reply.empMngId) || 0;
+                let mngId = getId(reply.empMngId || "0");
 
                 const newEmployee = new Employee(first, last, roleId, mngId);
 
