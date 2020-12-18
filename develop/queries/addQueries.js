@@ -3,6 +3,7 @@ const Employee = require("../lib/employee");
 const inquirer = require("inquirer");
 const mysql = require("mysql");
 const capitalize = require("../lib/capitalize");
+const getId = require("../lib/getId");
 
 let connection = mysql.createConnection({
   host: "localhost",
@@ -67,14 +68,7 @@ function addRole() {
         console.log("this is .then for addRole");
         console.log("deptRole is " + answer.deptRole);
 
-        const findDeptId = function () {
-          for (let i = 0; i < res.length; i++) {
-            if (answer.deptRole === res[i].name) {
-              console.log("res[i].id is " + res[i].id);
-              return res[i].id;
-            }
-          }
-        };
+        const findDeptId = getId(answer.deptRole);
 
         const newTitle = capitalize(answer.title);
 
@@ -165,8 +159,8 @@ function addEmployee() {
                 let first = capitalize(reply.firstName);
                 let last = capitalize(reply.lastName);
 
-                let roleId = parseInt([...ans.roleEmp].pop());
-                let mngId = parseInt([...reply.empMngId].pop()) || 0;
+                let roleId = getId(ans.roleEmp);
+                let mngId = parseInt(reply.empMngId) || 0;
 
                 const newEmployee = new Employee(first, last, roleId, mngId);
 

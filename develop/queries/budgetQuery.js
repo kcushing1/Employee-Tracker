@@ -1,5 +1,6 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
+const getId = require("../lib/getId");
 
 let connection = mysql.createConnection({
   host: "localhost",
@@ -35,7 +36,7 @@ function viewBudget() {
       .then((ansDep) => {
         console.log("inside .then for choose dept inq");
 
-        const deptId = parseInt([...ansDep.chosenDept].pop());
+        const deptId = getId(ansDep.chosenDept);
         console.log("dept id is " + deptId);
 
         connection.query(
@@ -68,12 +69,6 @@ function viewBudget() {
         );
       });
   });
-  //query depts w/id as arr
-  //inq select dept
-  //get dept id
-  //query roles where dept id = ?
-  //form budget arr
-  //arr.reduce
 }
 
-module.exports = { viewBudget };
+module.exports = viewBudget;

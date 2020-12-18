@@ -1,6 +1,5 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql");
-const conTable = require("console.table");
 
 const {
   addDepartment,
@@ -15,7 +14,7 @@ const {
 } = require("./develop/queries/viewQueries");
 
 const { updateRole } = require("./develop/queries/updateQueries");
-const { viewBudget } = require("./develop/queries/budgetQuery");
+const viewBudget = require("./develop/queries/budgetQuery");
 
 var connection = mysql.createConnection({
   host: "localhost",

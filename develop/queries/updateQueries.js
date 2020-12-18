@@ -1,6 +1,7 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const capitalize = require("../lib/capitalize");
+const getId = require("../lib/getId");
 
 let connection = mysql.createConnection({
   host: "localhost",
@@ -63,8 +64,8 @@ function updateRole() {
               console.log(reply);
 
               //get ids for role and employee
-              const findRoleId = parseInt([...reply.newRole].pop());
-              const findEmpId = parseInt([...ans.empName].pop());
+              const findRoleId = getId(reply.newRole);
+              const findEmpId = getId(ans.empName);
 
               console.log(findRoleId);
 
@@ -87,6 +88,79 @@ function updateRoleIdToDb(empId, roleId) {
   });
 }
 
+function updateManager() {
+  console.log("inside updateManager ftn");
+  connection.query("SELECT * FROM employees", (ers, rep) => {
+    if (ers) throw ers;
+    const makeNamesArr = function () {
+      let namesArr = [];
+      for (let i = 0; i < rep.length; i++) {
+        const addName =
+          rep[i].first_name + " " + rep[i].last_name + " " + rep[i].id;
+        namesArr.push(addName);
+      }
+      return namesArr;
+    };
+
+    inquirer
+      .prompt([
+        {
+          type: "list",
+          message: "Please select an employee:",
+          name: "empName",
+          choices: makeNamesArr(),
+        },
+      ])
+      .then((ans) => {
+        console.log("inside .then of names arr inq");
+
+        //get employee id
+        let empId = getId(ans.empName);
+
+        connection.query(
+          "SELECT * FROM roles INNER JOIN employees ON roles.id = employees.role_id WHERE roles.title = 'Manager'",
+          (err, res) => {
+            if (err) throw err;
+
+            const makeManagersArr = function () {
+              let mngArr = [];
+              for (let i = 0; i < res.length; i++) {
+                const newManager =
+                  res[i].first_name + " " + res[i].last_name + " " + res[i].id;
+                mngArr.push(newManager);
+              }
+              return mngArr;
+            };
+
+            inquirer
+              .prompt([
+                {
+                  type: "list",
+                  message: "Please select the new manager:",
+                  name: "newMng",
+                  choices: makeManagersArr(),
+                },
+              ])
+              .then((reply) => {
+                console.log("inside .then for inq for choose new mng");
+                //.pop manager id
+                let mngId = getId(reply.empMngId) || 0;
+                //update manager
+                console.log(empId, mngId + "are emp & mng ids");
+                updateManagerToDb(empId, mngId);
+              });
+          }
+        );
+      });
+  });
+}
+
+function updateManagerToDb(emp, mng) {
+  console.log("inside updateManagerToDb");
+  console.log(emp, mng);
+}
+
 module.exports = {
   updateRole,
+  updateManager,
 };

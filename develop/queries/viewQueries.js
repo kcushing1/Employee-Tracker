@@ -1,5 +1,4 @@
 const mysql = require("mysql");
-const conTable = require("console.table");
 
 let connection = mysql.createConnection({
   host: "localhost",
