@@ -144,7 +144,7 @@ function updateManager() {
               .then((reply) => {
                 console.log("inside .then for inq for choose new mng");
                 //.pop manager id
-                let mngId = getId(reply.empMngId) || 0;
+                let mngId = getId(reply.newMng) || 0;
                 //update manager
                 console.log(empId, mngId + "are emp & mng ids");
                 updateManagerToDb(empId, mngId);
@@ -158,6 +158,12 @@ function updateManager() {
 function updateManagerToDb(emp, mng) {
   console.log("inside updateManagerToDb");
   console.log(emp, mng);
+  const query = "UPDATE employees SET manager_id = ? WHERE id = ?";
+  const mngArr = [mng, emp];
+  connection.query(query, mngArr, (err) => {
+    if (err) throw err;
+    console.log("manager updated");
+  });
 }
 
 module.exports = {

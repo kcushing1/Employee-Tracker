@@ -13,7 +13,11 @@ const {
   viewEmployees,
 } = require("./develop/queries/viewQueries");
 
-const { updateRole } = require("./develop/queries/updateQueries");
+const {
+  updateRole,
+  updateManager,
+} = require("./develop/queries/updateQueries");
+
 const viewBudget = require("./develop/queries/budgetQuery");
 
 var connection = mysql.createConnection({
@@ -54,7 +58,8 @@ function start() {
         "View Roles",
         "View Employees",
         "View Department Budget",
-        "Update Role",
+        "Update Employee's Role",
+        "Update Employee's Manager",
         "Exit",
       ],
     })
@@ -74,8 +79,10 @@ function start() {
         viewEmployees();
       } else if (reply.chooseAction === "View Department Budget") {
         viewBudget();
-      } else if (reply.chooseAction === "Update Role") {
+      } else if (reply.chooseAction === "Update Employee's Role") {
         updateRole();
+      } else if (reply.chooseAction === "Update Employee's Manager") {
+        updateManager();
       } else {
         console.log("this response has not been written yet");
       }
