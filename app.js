@@ -1,6 +1,8 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql");
 
+require("dotenv").config();
+
 const {
   addDepartment,
   addRole,
@@ -22,11 +24,11 @@ const {
 const viewBudget = require("./develop/queries/budgetQuery");
 
 var connection = mysql.createConnection({
-  host: "localhost",
-  port: 3306,
-  user: "root",
-  password: "omg0hGosh!",
-  database: "employeesDB",
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
 });
 
 connection.connect(function (err) {
@@ -40,7 +42,6 @@ connection.connect(function (err) {
 function afterConnection() {
   connection.query("SELECT * FROM departments", function (err, res) {
     if (err) throw err;
-    //console.log(res);
     //connection.end();
   });
 }

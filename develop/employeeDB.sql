@@ -8,8 +8,6 @@ create table departments(
 	id int auto_increment primary key,
     name varchar(30)
 );
-insert into departments (name)
-values ("Placeholder"),("Food Services"), ("Housekeeping"), ("Engineering"), ("Marketing");
 
 create table roles(
 	id int auto_increment primary key,
@@ -27,8 +25,26 @@ create table employees(
     primary key (id)
 );
 
+insert into departments (name)
+values
+("Food Services"), 
+("Housekeeping"), 
+("Engineering"), 
+("Marketing");
+
 insert into roles (title, salary, dept_id)
-values ("Placeholder",0,1),("Executive Chef", 60000.00,2), ("Director of Housekeeping", 56800.00, 2), ("Manager", 34000, 3), ("Engineer", 60000, 4), ("Sales", 46000, 3);
+values
+("Executive Chef", 60000.00,1), 
+("Director of Housekeeping", 56800.00, 2), 
+("Manager", 34000, 3), 
+("Engineer", 60000, 4), 
+("Sales", 46000, 3);
 
 insert into employees (first_name, last_name, role_id, manager_id)
-values ("Place","Holder",1,1),("Frodo", "Baggins", 4, 3), ("Harry", "Potter", 3,3), ("Leslie", "Knope", 3, 1)
+values 
+("Frodo", "Baggins", 1, 4), 
+("Harry", "Potter", 3,4), 
+("Leslie", "Knope", 3, null),
+("William", "Shakespeare", 4,4),
+("Peter", "Rabbit", 2,2)
+
