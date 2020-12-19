@@ -35,7 +35,7 @@ function viewEmployees() {
 }
 
 function viewTeam() {
-  console.log("inside viewTeam ftn");
+  //query for list of managers
   connection.query(
     "SELECT * FROM roles INNER JOIN employees ON roles.id = employees.role_id WHERE roles.title = 'Manager'",
     (err, res) => {
@@ -50,6 +50,7 @@ function viewTeam() {
         }
         return mngArr;
       };
+
       inquirer
         .prompt([
           {
@@ -60,14 +61,16 @@ function viewTeam() {
           },
         ])
         .then((resp) => {
-          console.log("the .then for view team inq");
           const mng = getId(resp.chosenMng);
+
+          //query list of teammates under chosen manager
           connection.query(
             "SELECT first_name, last_name, id FROM employees WHERE manager_id = ?",
             [mng],
             (er, rs) => {
               if (er) throw er;
-              console.log("inside select manager team display q");
+
+              //display team as a table
               console.table(rs);
             }
           );
