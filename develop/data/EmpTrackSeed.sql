@@ -7,8 +7,8 @@ values
 
 insert into roles (title, salary, dept_id)
 values
-("Chef", 40000.00,1), 
-("Housekeeping", 56800.00, 2), 
+("Cook", 40600.00,1), 
+("Housekeeping", 41800.00, 2), 
 ("Manager", 34800, 3), 
 ("Engineer", 60000, 4), 
 ("Sales", 46200, 3);
@@ -20,4 +20,6 @@ values
 ("Leslie", "Knope", 3, null),
 ("William", "Shakespeare", 4,2),
 ("Peter", "Rabbit", 2,2),
-("Veronica", "Mars",4,3);
+("Veronica", "Mars",4,3),
+("Darth","Vader",1,3),
+("Sam","Adams",5,3)
