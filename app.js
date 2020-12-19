@@ -45,7 +45,7 @@ function afterConnection() {
   });
 }
 
-const start = function () {
+function start() {
   inquirer
     .prompt({
       type: "list",
@@ -90,10 +90,8 @@ const start = function () {
         endConnection();
       }
     });
-};
+}
 
 function endConnection() {
   connection.end;
 }
-
-module.exports = start;
