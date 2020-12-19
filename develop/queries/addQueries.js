@@ -14,7 +14,7 @@ let connection = mysql.createConnection({
 });
 
 function addDepartment() {
-  console.log("beginning of addDepartment");
+  //ask for name of new department
   inquirer
     .prompt({
       type: "input",
@@ -22,23 +22,24 @@ function addDepartment() {
       name: "addDept",
     })
     .then((reply) => {
-      console.log(reply.addDept);
+      //add new department to database
       const newDept = capitalize(reply.addDept);
       connection.query(
         "insert into departments (name) values ('" + newDept + "')",
         (err, res) => {
           if (err) throw err;
-          console.log("dept added...probably");
+          //let user know they were successful
+          console.log("Congratulations! You added a new department!");
         }
       );
     });
 }
 
 function addRole() {
-  console.log("beginning of addRole()");
   connection.query("SELECT * FROM departments", (err, res) => {
     if (err) throw err;
 
+    //ask user for new role information
     inquirer
       .prompt([
         {
@@ -47,7 +48,7 @@ function addRole() {
           name: "title",
         },
         {
-          type: "input",
+          type: "number",
           message: "What is the salary?",
           name: "salary",
         },
@@ -66,17 +67,12 @@ function addRole() {
         },
       ])
       .then((answer) => {
-        console.log("this is .then for addRole");
-        console.log("deptRole is " + answer.deptRole);
-
+        //get department ID from selected department
         const findDeptId = getId(answer.deptRole);
-
         const newTitle = capitalize(answer.title);
 
         //create Role from class
         const newRole = new Role(newTitle, answer.salary, findDeptId);
-
-        console.log(newRole);
 
         //add new role to database
         newRoleToDb(newRole);
@@ -85,12 +81,10 @@ function addRole() {
 }
 
 function addEmployee() {
-  console.log("beginning of addEmployee");
-
-  //get roles array from db
+  //get roles array from DB
   connection.query("SELECT * FROM roles", (err, resp) => {
     if (err) throw err;
-    console.log("inside addEmployee.rolesArr query");
+
     inquirer
       .prompt([
         {
@@ -109,13 +103,13 @@ function addEmployee() {
         },
       ])
       .then((ans) => {
-        console.log(ans.roleEmp);
-
+        //query for managers list to chose from
         connection.query(
           "SELECT * FROM roles INNER JOIN employees ON roles.id = employees.role_id WHERE roles.title = 'Manager'",
           (error, res) => {
             if (error) throw err;
 
+            //ask user for new employee's information
             inquirer
               .prompt([
                 {
@@ -155,29 +149,29 @@ function addEmployee() {
                 },
               ])
               .then((reply) => {
-                console.log("the .then for addEmployee");
-
+                //format names, get IDs
                 let first = capitalize(reply.firstName);
                 let last = capitalize(reply.lastName);
 
                 let roleId = getId(ans.roleEmp);
                 let mngId = getId(reply.empMngId || "0");
 
+                //create new employee object
                 const newEmployee = new Employee(first, last, roleId, mngId);
 
-                console.log(newEmployee);
+                //add employee to DB
                 newEmployeeToDb(newEmployee);
               });
           }
         );
-      }); //end connectionQuery for rolesArr
+      });
   });
 }
 
 function newRoleToDb(role) {
   connection.query("INSERT INTO ROLES SET ?", role, function (err, res) {
     if (err) throw err;
-    console.log("a new role was added");
+    console.log("How exciting! You added a new role!");
   });
 }
 
@@ -186,7 +180,7 @@ function newEmployeeToDb(emp) {
   connection.query(query, emp, (err, res) => {
     if (err) throw err;
     else {
-      console.log("employee added");
+      console.log("Your company grows! You added a new employee!");
     }
   });
 }
