@@ -16,8 +16,8 @@ values
 insert into employees (first_name, last_name, role_id, manager_id)
 values 
 ("Frodo", "Baggins", 1, 3), 
-("Harry", "Potter", 3,4), 
+("Harry", "Potter", 3,3), 
 ("Leslie", "Knope", 3, null),
-("William", "Shakespeare", 4,3),
-("Peter", "Rabbit", 2,6),
-("Veronica", "Mars",4,4);
+("William", "Shakespeare", 4,2),
+("Peter", "Rabbit", 2,2),
+("Veronica", "Mars",4,3);

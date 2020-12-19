@@ -4,6 +4,7 @@ const inquirer = require("inquirer");
 const mysql = require("mysql");
 const capitalize = require("../lib/capitalize");
 const getId = require("../lib/getId");
+const app = require("../../app");
 
 var connection = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -30,6 +31,8 @@ function addDepartment() {
           if (err) throw err;
           //let user know they were successful
           console.log("Congratulations! You added a new department!");
+          console.log(app.start + " is start");
+          app.start();
         }
       );
     });

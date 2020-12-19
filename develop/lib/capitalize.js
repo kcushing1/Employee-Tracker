@@ -1,9 +1,7 @@
-const { builtinModules } = require("module");
-
-//convert input of upper or lower case to be First Letter Capitalized
+//convert input of upper or lower case to be first letter capitalized
 
 const capitalize = (name) => {
   return name.charAt(0).toUpperCase() + name.toLowerCase().slice(1);
 };
 
-module.export = capitalize;
+module.exports = capitalize;

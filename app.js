@@ -42,11 +42,10 @@ connection.connect(function (err) {
 function afterConnection() {
   connection.query("SELECT * FROM departments", function (err, res) {
     if (err) throw err;
-    //connection.end();
   });
 }
 
-function start() {
+const start = function () {
   inquirer
     .prompt({
       type: "list",
@@ -67,7 +66,6 @@ function start() {
       ],
     })
     .then((reply) => {
-      console.log("this is app start.then");
       if (reply.chooseAction === "Add Department") {
         addDepartment();
       } else if (reply.chooseAction === "Add Role") {
@@ -89,12 +87,13 @@ function start() {
       } else if (reply.chooseAction === "Update Employee's Manager") {
         updateManager();
       } else {
-        console.log("this response has not been written yet");
+        endConnection();
       }
     });
-}
+};
 
 function endConnection() {
-  console.log("about to end connection");
   connection.end;
 }
+
+module.exports = start;
