@@ -12,10 +12,10 @@ let connection = mysql.createConnection({
 });
 
 function updateRole() {
-  console.log("inside updateRole ftn");
-
   connection.query("SELECT * FROM employees", (ers, rep) => {
     if (ers) throw ers;
+
+    //create list of employees to choose from to update
     const makeNamesArr = function () {
       let namesArr = [];
       for (let i = 0; i < rep.length; i++) {
@@ -36,8 +36,7 @@ function updateRole() {
         },
       ])
       .then((ans) => {
-        console.log("inside .then for names arr inq");
-
+        //query and make list of all available roles
         connection.query("SELECT * FROM roles", (err, resps) => {
           if (err) throw err;
 
@@ -60,16 +59,11 @@ function updateRole() {
               },
             ])
             .then((reply) => {
-              console.log("inside response from updateRole inquirer");
-              console.log(reply);
-
               //get ids for role and employee
               const findRoleId = getId(reply.newRole);
               const findEmpId = getId(ans.empName);
 
-              console.log(findRoleId);
-
-              console.log(findEmpId);
+              //update employee's role ID in DB
               updateRoleIdToDb(findEmpId, findRoleId);
             });
         });
@@ -83,13 +77,13 @@ function updateRoleIdToDb(empId, roleId) {
   connection.query(query, idsArr, (err) => {
     if (err) throw err;
     else {
-      console.log("role updated");
+      console.log("Embrace change! You updated a role!");
     }
   });
 }
 
 function updateManager() {
-  console.log("inside updateManager ftn");
+  //query to make a list of all employees
   connection.query("SELECT * FROM employees", (ers, rep) => {
     if (ers) throw ers;
     const makeNamesArr = function () {
@@ -112,11 +106,10 @@ function updateManager() {
         },
       ])
       .then((ans) => {
-        console.log("inside .then of names arr inq");
-
-        //get employee id
+        //get chosen employee id
         let empId = getId(ans.empName);
 
+        //query for list of all managers
         connection.query(
           "SELECT * FROM roles INNER JOIN employees ON roles.id = employees.role_id WHERE roles.title = 'Manager'",
           (err, res) => {
@@ -142,11 +135,9 @@ function updateManager() {
                 },
               ])
               .then((reply) => {
-                console.log("inside .then for inq for choose new mng");
-                //.pop manager id
+                //id for manager; if no manager, default is 0
                 let mngId = getId(reply.newMng) || 0;
-                //update manager
-                console.log(empId, mngId + "are emp & mng ids");
+
                 updateManagerToDb(empId, mngId);
               });
           }
@@ -156,13 +147,11 @@ function updateManager() {
 }
 
 function updateManagerToDb(emp, mng) {
-  console.log("inside updateManagerToDb");
-  console.log(emp, mng);
   const query = "UPDATE employees SET manager_id = ? WHERE id = ?";
   const mngArr = [mng, emp];
   connection.query(query, mngArr, (err) => {
     if (err) throw err;
-    console.log("manager updated");
+    console.log("Woohoo! This manager has a new teammate!");
   });
 }
 
